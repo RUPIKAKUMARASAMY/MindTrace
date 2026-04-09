@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Article</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Segoe UI',sans-serif;
+
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+
+padding:60px 20px;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.container{
+max-width:900px;
+margin:auto;
+
+background:rgba(255,255,255,.85);
+backdrop-filter:blur(10px);
+
+padding:40px;
+border-radius:20px;
+
+box-shadow:0 20px 50px rgba(0,0,0,.1);
+}
+
+h1{
+color:#2563eb;
+margin-bottom:20px;
+}
+
+p{
+color:#444;
+line-height:1.7;
+margin-bottom:16px;
+}
+
+.back{
+display:inline-block;
+margin-bottom:30px;
+color:#2563eb;
+cursor:pointer;
+text-decoration:none;
+font-weight:500;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a class="back" href="/blog">← Back to Articles</a>
+
+<h1 id="title"></h1>
+
+<div id="content"></div>
+
+</div>
+
+<script>
+
+/* GET ARTICLE TYPE FROM URL */
+
+const params = new URLSearchParams(window.location.search);
+const type = params.get("type");
+
+
+/* ARTICLE DATA */
+
+const articles = {
+
+stress: {
+title: "Chronic Stress in Modern Life",
+content: `
+<p>Modern life exposes us to constant pressure from work, social media, and expectations.</p>
+
+<p>Chronic stress activates the body's fight-or-flight response continuously, which can lead to fatigue, anxiety, and sleep problems.</p>
+
+<p>Practicing mindfulness, regular exercise, and setting boundaries with digital devices can significantly reduce stress levels.</p>
+`
+},
+
+depression: {
+title: "Early Signs of Depression",
+content: `
+<p>Depression often begins with subtle emotional changes such as persistent sadness, loss of motivation, and fatigue.</p>
+
+<p>People may withdraw from social activities or lose interest in things they once enjoyed.</p>
+
+<p>Recognizing these early signs can help individuals seek support and treatment before symptoms worsen.</p>
+`
+},
+
+anxiety: {
+title: "Understanding Anxiety Disorders",
+content: `
+<p>Anxiety becomes a disorder when worry is constant and interferes with daily life.</p>
+
+<p>Symptoms can include racing thoughts, difficulty concentrating, and physical tension.</p>
+
+<p>Therapy, breathing exercises, and lifestyle adjustments can greatly reduce anxiety symptoms.</p>
+`
+},
+
+burnout: {
+title: "Burnout and Emotional Exhaustion",
+content: `
+<p>Burnout occurs when long-term stress from work or responsibilities leads to emotional and physical exhaustion.</p>
+
+<p>People experiencing burnout often feel detached, unmotivated, and overwhelmed.</p>
+
+<p>Taking breaks, setting healthy work boundaries, and prioritizing rest can help recover from burnout.</p>
+`
+},
+
+sleep: {
+title: "The Role of Sleep in Mental Health",
+content: `
+<p>Sleep plays a critical role in emotional regulation and cognitive function.</p>
+
+<p>Poor sleep can worsen anxiety, depression, and stress levels.</p>
+
+<p>Maintaining a regular sleep schedule and limiting screen time before bed improves mental wellbeing.</p>
+`
+},
+
+social: {
+title: "Social Anxiety in Young Adults",
+content: `
+<p>Social anxiety involves a strong fear of judgment in social situations.</p>
+
+<p>Many young adults experience anxiety due to increased online comparison and performance pressure.</p>
+
+<p>Gradual exposure to social settings and cognitive behavioral therapy can help manage social anxiety.</p>
+`
+}
+
+};
+
+
+/* LOAD ARTICLE */
+
+if(articles[type]){
+document.getElementById("title").innerText = articles[type].title;
+document.getElementById("content").innerHTML = articles[type].content;
+}
+else{
+document.getElementById("title").innerText = "Article Not Found";
+}
+
+</script>
+
+</body>
+</html>

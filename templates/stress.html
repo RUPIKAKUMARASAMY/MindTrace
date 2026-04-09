@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Stress Assessment</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.assessment-wrapper{
+width:100%;
+display:flex;
+justify-content:center;
+}
+
+.assessment-card{
+width:750px;
+backdrop-filter:blur(16px);
+background:rgba(255,255,255,.9);
+border-radius:26px;
+padding:40px;
+box-shadow:0 20px 60px rgba(0,0,0,.08);
+max-height:85vh;
+overflow-y:auto;
+}
+
+.assessment-card h2{
+text-align:center;
+margin-bottom:30px;
+color:#2563eb;
+}
+
+.question{
+margin-bottom:25px;
+}
+
+.question h4{
+margin-bottom:12px;
+color:#444;
+font-weight:500;
+}
+
+.options{
+display:flex;
+gap:10px;
+}
+
+.option-btn{
+flex:1;
+padding:10px;
+border-radius:10px;
+border:1px solid #e5e7eb;
+cursor:pointer;
+text-align:center;
+font-size:13px;
+background:rgba(255,255,255,.7);
+transition:.25s;
+}
+
+.option-btn:hover{
+transform:translateY(-2px);
+background:#eef2ff;
+}
+
+.option-btn.active{
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+border:none;
+color:white;
+}
+
+.submit-btn{
+margin-top:30px;
+padding:14px;
+border-radius:50px;
+border:none;
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+cursor:pointer;
+font-weight:600;
+width:100%;
+color:white;
+transition:.25s;
+}
+
+.submit-btn:hover{
+transform:translateY(-2px);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="assessment-wrapper">
+<div class="assessment-card">
+
+<h2>Stress Assessment</h2>
+
+<form id="stressForm"></form>
+
+<button class="submit-btn" onclick="calculateScore(event)" type="button">
+Submit Assessment
+</button>
+
+</div>
+</div>
+
+<script>
+
+window.onload = function(){
+
+const questions = [
+"I feel overwhelmed by responsibilities.",
+"I find it hard to relax after work or study.",
+"I feel irritated over small matters.",
+"I experience headaches due to pressure.",
+"I feel emotionally exhausted.",
+"I have difficulty sleeping due to stress.",
+"I struggle to focus on tasks.",
+"I feel constant pressure to perform.",
+"I feel nervous without clear reason.",
+"I feel mentally drained frequently."
+];
+
+const form=document.getElementById("stressForm");
+
+questions.forEach((q,index)=>{
+
+const questionDiv=document.createElement("div");
+questionDiv.classList.add("question");
+
+questionDiv.innerHTML=`
+<h4>${index+1}. ${q}</h4>
+<div class="options">
+<div class="option-btn" onclick="selectOption(this,${index},0)">Never</div>
+<div class="option-btn" onclick="selectOption(this,${index},1)">Sometimes</div>
+<div class="option-btn" onclick="selectOption(this,${index},2)">Often</div>
+<div class="option-btn" onclick="selectOption(this,${index},3)">Always</div>
+</div>
+`;
+
+form.appendChild(questionDiv);
+
+});
+
+};
+
+let answers=new Array(10).fill(null);
+
+function selectOption(element,questionIndex,value){
+
+const siblings=element.parentElement.querySelectorAll(".option-btn");
+
+siblings.forEach(btn=>btn.classList.remove("active"));
+
+element.classList.add("active");
+
+answers[questionIndex]=value;
+
+}
+
+async function calculateScore(event){
+
+if(event) event.preventDefault();
+
+if(answers.includes(null)){
+alert("Please answer all questions before submitting.");
+return;
+}
+
+let total=answers.reduce((a,b)=>a+b,0);
+
+try{
+
+await fetch("/api/stress-result",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({score:total})
+});
+
+// 🚫 NO RESULT DISPLAY HERE
+// 🚫 NO REDIRECT TO /results
+
+// ✅ ONLY REDIRECT TO USER PAGE
+window.location.href="/user";
+
+}catch(error){
+console.error("Error:", error);
+alert("Something went wrong.");
+}
+
+}
+
+</script>
+
+</body>
+</html>

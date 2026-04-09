@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Assessments</title>
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+
+padding:70px 8%;
+color:#1f2937;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* HEADER */
+
+.header{
+text-align:center;
+margin-bottom:60px;
+}
+
+.header h1{
+font-size:42px;
+color:#2563eb;
+margin-bottom:10px;
+}
+
+.header p{
+opacity:.75;
+font-size:15px;
+}
+
+/* TEST GRID */
+
+.tests{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+
+gap:30px;
+
+margin-bottom:80px;
+
+}
+
+/* CARD */
+
+.test-card{
+
+background:rgba(255,255,255,.9);
+
+backdrop-filter:blur(12px);
+
+border-radius:26px;
+
+padding:35px;
+
+text-align:center;
+
+cursor:pointer;
+
+box-shadow:0 20px 50px rgba(0,0,0,.08);
+
+transition:.3s;
+
+}
+
+.test-card:hover{
+transform:translateY(-8px) scale(1.02);
+}
+
+.icon{
+font-size:32px;
+margin-bottom:10px;
+}
+
+.test-title{
+font-size:18px;
+font-weight:600;
+color:#2563eb;
+}
+
+/* RESULTS SECTION */
+
+.results-section{
+max-width:750px;
+margin:auto;
+text-align:center;
+}
+
+.results-section h2{
+color:#2563eb;
+margin-bottom:30px;
+}
+
+/* RESULT CARD */
+
+.result-card{
+
+background:white;
+
+padding:22px;
+
+border-radius:20px;
+
+margin-bottom:18px;
+
+box-shadow:0 18px 45px rgba(0,0,0,.08);
+
+text-align:left;
+
+}
+
+.result-title{
+font-weight:600;
+color:#2563eb;
+}
+
+.result-severity{
+margin-top:6px;
+}
+
+.result-date{
+font-size:12px;
+opacity:.6;
+margin-top:5px;
+}
+
+.empty{
+opacity:.7;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Select Your Assessment</h1>
+<p>Understand your emotional patterns through guided mental health assessments</p>
+</div>
+
+<div class="tests">
+
+<div class="test-card" onclick="go('depression.html')">
+<div class="icon">🧠</div>
+<div class="test-title">Depression</div>
+</div>
+
+<div class="test-card" onclick="go('anxiety.html')">
+<div class="icon">⚡</div>
+<div class="test-title">Anxiety</div>
+</div>
+
+<div class="test-card" onclick="go('stress.html')">
+<div class="icon">📊</div>
+<div class="test-title">Stress</div>
+</div>
+
+<div class="test-card" onclick="go('adhd.html')">
+<div class="icon">🎯</div>
+<div class="test-title">ADHD</div>
+</div>
+
+<div class="test-card" onclick="go('ptsd.html')">
+<div class="icon">🛡</div>
+<div class="test-title">PTSD</div>
+</div>
+
+<div class="test-card" onclick="go('addiction.html')">
+<div class="icon">⚠</div>
+<div class="test-title">Addiction</div>
+</div>
+
+<div class="test-card" onclick="go('social-anxiety.html')">
+<div class="icon">👥</div>
+<div class="test-title">Social Anxiety</div>
+</div>
+
+<div class="test-card" onclick="go('youth.html')">
+<div class="icon">🌱</div>
+<div class="test-title">Youth Mental Health</div>
+</div>
+
+</div>
+
+<div class="results-section">
+
+<h2>Your Results</h2>
+
+<div id="resultsContainer"></div>
+
+</div>
+
+<script>
+
+function go(page){
+window.location.href = page;
+}
+
+function loadResults(){
+
+const container = document.getElementById("resultsContainer");
+
+let results = JSON.parse(localStorage.getItem("mindtrace_results")) || [];
+
+if(results.length === 0){
+container.innerHTML="<p class='empty'>No assessments taken yet.</p>";
+return;
+}
+
+results.forEach(r=>{
+
+container.innerHTML += `
+
+<div class="result-card">
+
+<div class="result-title">${r.test} Assessment</div>
+
+<div class="result-severity">Severity: ${r.severity}</div>
+
+<div class="result-date">Taken on ${r.date}</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+loadResults();
+
+</script>
+
+</body>
+</html>

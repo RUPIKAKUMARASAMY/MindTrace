@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace AI Assistant</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#a8edea,#c9d6ff,#e4c1f9);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* Chat container */
+
+.chat-container{
+width:420px;
+height:560px;
+background:rgba(255,255,255,.9);
+backdrop-filter:blur(15px);
+border-radius:22px;
+box-shadow:0 40px 80px rgba(0,0,0,.25);
+display:flex;
+flex-direction:column;
+overflow:hidden;
+}
+
+/* Header */
+
+.chat-header{
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+color:white;
+padding:18px;
+text-align:center;
+font-size:20px;
+font-weight:600;
+}
+
+/* Messages */
+
+.messages{
+flex:1;
+padding:18px;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+/* Message bubble */
+
+.message{
+padding:12px 16px;
+border-radius:16px;
+max-width:75%;
+font-size:14px;
+line-height:1.4;
+animation:fadeIn .3s ease;
+}
+
+/* User bubble */
+
+.user{
+background:#e3f2fd;
+align-self:flex-end;
+}
+
+/* Bot bubble */
+
+.bot{
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+color:white;
+align-self:flex-start;
+}
+
+/* Input area */
+
+.input-area{
+display:flex;
+padding:14px;
+border-top:1px solid #eee;
+background:white;
+}
+
+.input-area input{
+flex:1;
+padding:12px;
+border-radius:16px;
+border:1px solid #ddd;
+outline:none;
+font-size:14px;
+}
+
+.input-area button{
+margin-left:10px;
+padding:12px 18px;
+border:none;
+border-radius:16px;
+background:#6366f1;
+color:white;
+font-size:14px;
+cursor:pointer;
+transition:.2s;
+}
+
+.input-area button:hover{
+background:#4f46e5;
+}
+
+/* Animation */
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(6px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="chat-container">
+
+<div class="chat-header">
+MindTrace AI Assistant
+</div>
+
+<div id="messages" class="messages"></div>
+
+<div class="input-area">
+<input id="userInput" placeholder="Tell me how you're feeling...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+</div>
+
+<script>
+
+function addMessage(text,type){
+
+let msg=document.createElement("div");
+msg.className="message "+type;
+msg.innerText=text;
+
+document.getElementById("messages").appendChild(msg);
+
+document.getElementById("messages").scrollTop=9999;
+}
+
+async function sendMessage(){
+
+let input=document.getElementById("userInput");
+let text=input.value.trim();
+
+if(!text) return;
+
+addMessage(text,"user");
+
+input.value="";
+
+let bot=document.createElement("div");
+bot.className="message bot";
+bot.innerText="Thinking...";
+document.getElementById("messages").appendChild(bot);
+
+let res=await fetch("/chatbot",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:text})
+});
+
+let data=await res.json();
+
+bot.innerText=data.reply;
+}
+
+</script>
+
+</body>
+</html>

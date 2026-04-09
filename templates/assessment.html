@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Assessments</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Segoe UI',sans-serif;
+
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+
+padding:80px 40px;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+h1{
+text-align:center;
+color:#2563eb;
+margin-bottom:50px;
+}
+
+.tests{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+max-width:1200px;
+margin:auto;
+}
+
+.test-card{
+background:white;
+border-radius:18px;
+padding:35px;
+text-align:center;
+cursor:pointer;
+box-shadow:0 8px 20px rgba(0,0,0,.06);
+transition:.3s;
+}
+
+.test-card:hover{
+transform:translateY(-6px);
+}
+
+.test-card h3{
+color:#2563eb;
+font-weight:600;
+}
+
+.back{
+text-align:center;
+margin-top:40px;
+}
+
+.back button{
+padding:12px 30px;
+border:none;
+border-radius:30px;
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+color:white;
+cursor:pointer;
+font-weight:600;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Select Your Assessment</h1>
+
+<div class="tests">
+
+<div class="test-card" onclick="window.location.href='/depression'">
+<h3>Depression</h3>
+</div>
+
+<div class="test-card" onclick="window.location.href='/anxiety'">
+<h3>Anxiety</h3>
+</div>
+
+<div class="test-card" onclick="window.location.href='/stress'">
+<h3>Stress</h3>
+</div>
+
+<div class="test-card" onclick="window.location.href='/adhd'">
+<h3>ADHD</h3>
+</div>
+
+<div class="test-card" onclick="window.location.href='/ptsd'">
+<h3>PTSD</h3>
+</div>
+
+<div class="test-card" onclick="window.location.href='/addiction'">
+<h3>Addiction</h3>
+</div>
+
+<div class="test-card" onclick="window.location.href='/social-anxiety'">
+<h3>Social Anxiety</h3>
+</div>
+
+<div class="test-card" onclick="window.location.href='/youth-mental-health'">
+<h3>Youth Mental Health</h3>
+</div>
+
+</div>
+
+<div class="back">
+<button onclick="window.location.href='/'">
+Back to Dashboard
+</button>
+</div>
+
+</body>
+</html>

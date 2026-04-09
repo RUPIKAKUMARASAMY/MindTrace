@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Emotional Journey</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Segoe UI',sans-serif;
+
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px;
+
+/* MATCHES OTHER PAGES */
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+
+overflow-x:hidden;
+position:relative;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* ripple effect */
+
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+
+background:radial-gradient(circle at var(--x,50%) var(--y,50%),
+rgba(255,255,255,0.35),
+transparent 40%);
+
+transition:background .2s ease;
+z-index:0;
+}
+
+/* container */
+
+.container{
+
+width:100%;
+max-width:900px;
+
+backdrop-filter:blur(18px);
+background:rgba(255,255,255,.85);
+
+border-radius:36px;
+
+padding:55px;
+
+box-shadow:0 25px 70px rgba(0,0,0,.08);
+
+position:relative;
+z-index:1;
+
+}
+
+h1{
+text-align:center;
+color:#2563eb;
+margin-bottom:40px;
+font-weight:600;
+}
+
+/* dial */
+
+.dial-wrapper{
+display:flex;
+justify-content:center;
+margin-bottom:25px;
+}
+
+.dial{
+
+width:200px;
+height:200px;
+
+border-radius:50%;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+cursor:pointer;
+transition:.4s ease;
+
+position:relative;
+
+}
+
+.dial-inner{
+
+width:150px;
+height:150px;
+
+background:white;
+
+border-radius:50%;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:45px;
+
+box-shadow:0 10px 30px rgba(0,0,0,.06);
+
+transition:.3s ease;
+
+}
+
+.mood-label{
+text-align:center;
+font-size:22px;
+margin-bottom:20px;
+font-weight:500;
+color:#2563eb;
+}
+
+/* textarea */
+
+textarea{
+
+width:100%;
+height:90px;
+
+border-radius:18px;
+border:1px solid #e5e7eb;
+
+padding:15px;
+resize:none;
+
+font-family:'Segoe UI',sans-serif;
+
+}
+
+/* button */
+
+button{
+
+margin-top:20px;
+width:100%;
+
+padding:14px;
+
+border:none;
+border-radius:24px;
+
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+color:white;
+
+font-size:15px;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+button:hover{
+transform:translateY(-3px);
+}
+
+/* stats */
+
+.stats{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+
+gap:20px;
+
+margin-top:40px;
+
+}
+
+.stat-box{
+
+background:#f8fafc;
+
+padding:20px;
+
+border-radius:18px;
+
+text-align:center;
+
+font-size:14px;
+
+}
+
+/* timeline */
+
+.timeline{
+
+margin-top:40px;
+max-height:220px;
+overflow-y:auto;
+
+}
+
+.entry{
+
+background:#f1f5f9;
+
+padding:12px;
+
+border-radius:14px;
+
+margin-bottom:10px;
+
+font-size:13px;
+
+}
+
+/* insight */
+
+.insight{
+
+margin-top:30px;
+
+padding:18px;
+
+border-radius:18px;
+
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+color:white;
+
+font-size:14px;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Emotional Journey</h1>
+
+<div class="dial-wrapper">
+<div class="dial" id="dial">
+<div class="dial-inner" id="emoji">🙂</div>
+</div>
+</div>
+
+<div class="mood-label" id="moodText">Balanced</div>
+
+<textarea id="reflection" placeholder="What influenced your mood today?"></textarea>
+
+<button onclick="saveMood()">Save Entry</button>
+
+<div class="stats">
+
+<div class="stat-box">
+<strong>Current Streak</strong><br>
+<span id="streak">0 days</span>
+</div>
+
+<div class="stat-box">
+<strong>Average Mood</strong><br>
+<span id="average">0</span>
+</div>
+
+</div>
+
+<canvas id="chart" height="120" style="margin-top:30px;"></canvas>
+
+<div class="insight" id="insightBox"></div>
+
+<div class="timeline" id="timeline"></div>
+
+</div>
+
+<script>
+
+document.addEventListener("mousemove",(e)=>{
+const x=(e.clientX/window.innerWidth)*100;
+const y=(e.clientY/window.innerHeight)*100;
+document.body.style.setProperty('--x',x+'%');
+document.body.style.setProperty('--y',y+'%');
+});
+
+let moodValue=3;
+
+const emojis=["😢","😟","🙂","😊","😄"];
+const labels=["Very Low","Low","Balanced","Positive","Very Positive"];
+
+const dial=document.getElementById("dial");
+const emoji=document.getElementById("emoji");
+const moodText=document.getElementById("moodText");
+
+function updateDial(){
+
+const angle=moodValue*72;
+
+dial.style.background=`conic-gradient(#38bdf8 ${angle}deg,#6366f1 ${angle}deg,#eee ${angle}deg)`;
+
+emoji.innerText=emojis[moodValue-1];
+moodText.innerText=labels[moodValue-1];
+
+}
+
+dial.addEventListener("click",()=>{
+moodValue++;
+if(moodValue>5) moodValue=1;
+updateDial();
+});
+
+function saveMood(){
+
+const note=document.getElementById("reflection").value;
+const date=new Date().toISOString().split("T")[0];
+
+const entry={mood:moodValue,note,date};
+
+let data=JSON.parse(localStorage.getItem("moods"))||[];
+
+data.unshift(entry);
+
+localStorage.setItem("moods",JSON.stringify(data));
+
+document.getElementById("reflection").value="";
+
+displayData();
+
+}
+
+function displayData(){
+
+const timeline=document.getElementById("timeline");
+
+timeline.innerHTML="";
+
+let data=JSON.parse(localStorage.getItem("moods"))||[];
+
+let total=0;
+
+data.forEach(item=>{
+
+total+=item.mood;
+
+timeline.innerHTML+=`
+<div class="entry">
+<strong>${item.date}</strong><br>
+Mood: ${labels[item.mood-1]}<br>
+${item.note||""}
+</div>
+`;
+
+});
+
+if(data.length){
+
+document.getElementById("average").innerText=(total/data.length).toFixed(1);
+
+}
+
+calculateStreak(data);
+updateChart(data);
+generateInsight(data);
+
+}
+
+function calculateStreak(data){
+
+if(!data.length){
+document.getElementById("streak").innerText="0 days";
+return;
+}
+
+let streak=1;
+
+for(let i=1;i<data.length;i++){
+
+const prev=new Date(data[i-1].date);
+const curr=new Date(data[i].date);
+
+if((prev-curr)/(1000*60*60*24)==1) streak++;
+else break;
+
+}
+
+document.getElementById("streak").innerText=streak+" days";
+
+}
+
+let chart;
+
+function updateChart(data){
+
+const ctx=document.getElementById("chart").getContext("2d");
+
+const last7=data.slice(0,7).reverse();
+
+if(chart) chart.destroy();
+
+chart=new Chart(ctx,{
+type:'line',
+data:{
+labels:last7.map(d=>d.date),
+datasets:[{
+data:last7.map(d=>d.mood),
+borderColor:'#2563eb',
+backgroundColor:'rgba(56,189,248,0.25)',
+tension:.4,
+fill:true
+}]
+},
+options:{
+scales:{y:{min:1,max:5}},
+plugins:{legend:{display:false}}
+}
+});
+
+}
+
+function generateInsight(data){
+
+if(!data.length){
+document.getElementById("insightBox").innerText="Start tracking to see emotional insights.";
+return;
+}
+
+const avg=data.reduce((a,b)=>a+b.mood,0)/data.length;
+
+let message="";
+
+if(avg<2)
+message="Your recent mood trend shows lower energy. Consider gentle self-care and rest.";
+
+else if(avg<3.5)
+message="Your mood appears balanced overall. Maintain routines that support you.";
+
+else
+message="You've been trending positively. Keep nurturing what’s working for you.";
+
+document.getElementById("insightBox").innerText=message;
+
+}
+
+updateDial();
+displayData();
+
+</script>
+
+</body>
+</html>

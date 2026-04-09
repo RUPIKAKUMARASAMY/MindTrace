@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Games</title>
+
+<style>
+body{
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+padding:30px;
+text-align:center;
+}
+
+h1{color:#2563eb;}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+max-width:900px;
+margin:auto;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:20px;
+cursor:pointer;
+box-shadow:0 10px 25px rgba(0,0,0,.1);
+transition:.3s;
+font-weight:600;
+}
+.card:hover{transform:scale(1.05);}
+
+.game{display:none;margin-top:30px;}
+
+.btn{
+padding:12px 25px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+color:white;
+cursor:pointer;
+margin:8px;
+}
+
+/* RPS */
+.rps-btn{
+padding:12px 20px;
+margin:8px;
+border:none;
+border-radius:14px;
+color:white;
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+cursor:pointer;
+transition:.3s;
+}
+.rps-btn:hover{transform:scale(1.1);}
+
+/* GRID */
+.grid-game{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+max-width:420px;
+margin:auto;
+}
+.tile{
+height:90px;
+background:#1e293b;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+color:white;
+cursor:pointer;
+}
+
+/* TTT */
+.ttt{
+display:grid;
+grid-template-columns:repeat(3,100px);
+gap:10px;
+justify-content:center;
+}
+.cell{
+height:100px;
+background:white;
+font-size:30px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:12px;
+cursor:pointer;
+}
+
+/* SIMON */
+.simon{
+display:grid;
+grid-template-columns:repeat(2,120px);
+gap:15px;
+justify-content:center;
+}
+.pad{
+height:120px;
+border-radius:15px;
+opacity:.6;
+cursor:pointer;
+transition:.2s;
+}
+.pad.active{
+opacity:1;
+transform:scale(1.05);
+box-shadow:0 0 20px white;
+}
+.red{background:red;}
+.blue{background:blue;}
+.green{background:green;}
+.yellow{background:gold;}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎮 Games Hub</h1>
+
+<div class="grid" id="menu">
+<div class="card" onclick="openGame('memory')">🧠 Memory</div>
+<div class="card" onclick="openGame('rps')">✊ RPS</div>
+<div class="card" onclick="openGame('ttt')">❌⭕ Tic Tac Toe</div>
+<div class="card" onclick="openGame('grid')">🧩 Memory Grid</div>
+<div class="card" onclick="openGame('guess')">🎯 Guess</div>
+<div class="card" onclick="openGame('simon')">🎵 Simon</div>
+</div>
+
+<div id="gameArea" class="game"></div>
+<canvas id="confetti"></canvas>
+
+<script>
+
+function openGame(type){
+menu.style.display="none";
+gameArea.style.display="block";
+
+/* MEMORY */
+if(type==="memory"){
+let num=Math.floor(100000+Math.random()*900000);
+
+gameArea.innerHTML=`
+<h2>🧠 Memory Challenge</h2>
+<h1 id="num">${num}</h1>
+<p id="info">Memorize in 5 seconds...</p>
+
+<input id="guessInput" placeholder="Enter number"
+style="padding:12px;border-radius:10px;margin-top:15px;display:none;">
+
+<br>
+<button id="submitBtn" class="btn" style="display:none;">Submit</button>
+
+<p id="res"></p>
+<button class="btn" onclick="back()">Back</button>
+`;
+
+setTimeout(()=>{
+document.getElementById("num").innerText="???";
+document.getElementById("info").innerText="Enter what you remember";
+
+let input=document.getElementById("guessInput");
+let btn=document.getElementById("submitBtn");
+
+input.style.display="block";
+btn.style.display="inline-block";
+
+btn.onclick=function(){
+let guess=input.value.trim();
+
+if(guess===""){
+res.innerText="Enter something!";
+return;
+}
+
+if(guess==num){
+res.innerText="🎉 Correct!";
+startConfetti();
+}else{
+res.innerText="❌ Wrong! It was "+num;
+}
+};
+
+},5000);
+}
+
+/* RPS */
+if(type==="rps"){
+gameArea.innerHTML=`
+<h2>RPS</h2>
+<div style="font-size:50px;" id="arena">❔ VS ❔</div>
+<button class="rps-btn" onclick="playRPS('rock')">✊</button>
+<button class="rps-btn" onclick="playRPS('paper')">✋</button>
+<button class="rps-btn" onclick="playRPS('scissors')">✌️</button>
+<p id="res"></p>
+<button class="btn" onclick="back()">Back</button>`;
+}
+
+/* SIMON */
+if(type==="simon"){
+gameArea.innerHTML=`
+<h2>🎵 Simon Says</h2>
+
+<p id="info">Press Start</p>
+
+<div class="simon">
+<div class="pad red" onclick="handleSimonInput(0)"></div>
+<div class="pad blue" onclick="handleSimonInput(1)"></div>
+<div class="pad green" onclick="handleSimonInput(2)"></div>
+<div class="pad yellow" onclick="handleSimonInput(3)"></div>
+</div>
+
+<p id="level">Level: 1</p>
+
+<button class="btn" onclick="startSimon()">Start Game</button>
+<button class="btn" onclick="back()">Back</button>
+`;
+}
+
+/* TTT */
+if(type==="ttt"){
+board=["","","","","","","","",""];
+gameArea.innerHTML=`
+<h2>Tic Tac Toe</h2>
+<div id="ttt" class="ttt"></div>
+<p id="res"></p>
+<button class="btn" onclick="back()">Back</button>`;
+renderBoard();
+}
+
+/* GRID */
+if(type==="grid"){initGrid();}
+
+/* GUESS */
+if(type==="guess"){
+gameArea.innerHTML=`
+<h2>Guess 1-10</h2>
+<input id="g">
+<button class="btn" onclick="guess()">Try</button>
+<p id="res"></p>
+<button class="btn" onclick="back()">Back</button>`;
+}
+}
+
+function back(){
+gameArea.style.display="none";
+menu.style.display="grid";
+stopConfetti();
+}
+
+/* RPS */
+function playRPS(u){
+let arr=["rock","paper","scissors"];
+let b=arr[Math.random()*3|0];
+let emoji={rock:"✊",paper:"✋",scissors:"✌️"};
+arena.innerText=emoji[u]+" VS "+emoji[b];
+
+if(u===b) res.innerText="Draw";
+else if((u==="rock"&&b==="scissors")||(u==="paper"&&b==="rock")||(u==="scissors"&&b==="paper")){
+res.innerText="Win!";
+startConfetti();
+}else res.innerText="Lose";
+}
+
+/* SIMON FIXED */
+let simonSeq=[];
+let userSeq=[];
+let simonLevel=1;
+let simonPlaying=false;
+
+function startSimon(){
+simonSeq=[];
+simonLevel=1;
+nextSimon();
+}
+
+function nextSimon(){
+userSeq=[];
+simonPlaying=false;
+
+document.getElementById("level").innerText="Level: "+simonLevel;
+document.getElementById("info").innerText="Watch...";
+
+simonSeq.push(Math.floor(Math.random()*4));
+
+let pads=document.querySelectorAll(".pad");
+let i=0;
+
+let interval=setInterval(()=>{
+let idx=simonSeq[i];
+
+pads[idx].classList.add("active");
+setTimeout(()=>pads[idx].classList.remove("active"),400);
+
+i++;
+
+if(i>=simonSeq.length){
+clearInterval(interval);
+simonPlaying=true;
+document.getElementById("info").innerText="Your turn";
+}
+
+},700);
+}
+
+function handleSimonInput(i){
+if(!simonPlaying) return;
+
+let pads=document.querySelectorAll(".pad");
+
+pads[i].classList.add("active");
+setTimeout(()=>pads[i].classList.remove("active"),200);
+
+userSeq.push(i);
+
+let idx=userSeq.length-1;
+
+if(userSeq[idx]!==simonSeq[idx]){
+document.getElementById("info").innerText="❌ Game Over";
+startConfetti();
+simonPlaying=false;
+return;
+}
+
+if(userSeq.length===simonSeq.length){
+document.getElementById("info").innerText="✅ Good!";
+simonLevel++;
+setTimeout(nextSimon,1000);
+}
+}
+
+/* TTT */
+let board=[];
+function renderBoard(){
+ttt.innerHTML="";
+board.forEach((v,i)=>{
+let d=document.createElement("div");
+d.className="cell";
+d.innerText=v;
+d.onclick=()=>move(i);
+ttt.appendChild(d);
+});
+}
+function move(i){
+if(board[i])return;
+board[i]="X";
+if(checkWin("X")){res.innerText="Win";startConfetti();return;}
+let b=Math.random()*9|0;
+while(board[b]) b=Math.random()*9|0;
+board[b]="O";
+renderBoard();
+}
+function checkWin(p){
+return[[0,1,2],[3,4,5],[6,7,8]].some(c=>c.every(i=>board[i]===p));
+}
+
+/* GRID */
+function initGrid(){
+let arr=["🍎","🍎","🐶","🐶","🌟","🌟","🎵","🎵","❤️","❤️","🚀","🚀"];
+arr.sort(()=>Math.random()-0.5);
+
+gameArea.innerHTML=`<h2>Memory Grid</h2>
+<div id="g" class="grid-game"></div>
+<p id="res"></p>
+<button class="btn" onclick="back()">Back</button>`;
+
+let first=null,count=0;
+
+arr.forEach(v=>{
+let d=document.createElement("div");
+d.className="tile";
+d.onclick=()=>{
+d.innerText=v;
+if(!first) first=d;
+else{
+if(first.innerText===v){
+count++;
+if(count===6){res.innerText="Win!";startConfetti();}
+}else{
+setTimeout(()=>{
+d.innerText="";
+first.innerText="";
+},400);
+}
+first=null;
+}
+};
+g.appendChild(d);
+});
+}
+
+/* GUESS */
+function guess(){
+let r=Math.random()*10|0;
+res.innerText=(g.value==r)?"Win!":"Wrong: "+r;
+if(g.value==r) startConfetti();
+}
+
+/* CONFETTI */
+let confettiRunning=false;
+function startConfetti(){
+confettiRunning=true;
+animate();
+}
+function animate(){
+if(!confettiRunning)return;
+let ctx=confetti.getContext("2d");
+confetti.width=innerWidth;
+confetti.height=innerHeight;
+ctx.clearRect(0,0,confetti.width,confetti.height);
+for(let i=0;i<100;i++){
+ctx.fillStyle=`hsl(${Math.random()*360},100%,50%)`;
+ctx.fillRect(Math.random()*confetti.width,Math.random()*confetti.height,5,5);
+}
+requestAnimationFrame(animate);
+}
+function stopConfetti(){
+confettiRunning=false;
+confetti.getContext("2d").clearRect(0,0,confetti.width,confetti.height);
+}
+
+</script>
+
+</body>
+</html>

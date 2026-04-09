@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Settings</title>
+
+<style>
+
+body{
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+.card{
+
+width:450px;
+
+background:white;
+
+padding:40px;
+
+border-radius:25px;
+
+box-shadow:0 25px 60px rgba(0,0,0,.08);
+
+}
+
+h2{
+color:#2563eb;
+margin-bottom:25px;
+text-align:center;
+}
+
+.setting{
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin-bottom:5px;
+}
+
+input{
+
+width:100%;
+
+padding:10px;
+
+border-radius:10px;
+
+border:1px solid #ddd;
+
+}
+
+button{
+
+margin-top:20px;
+
+width:100%;
+
+padding:12px;
+
+border:none;
+
+border-radius:40px;
+
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+color:white;
+
+cursor:pointer;
+
+}
+
+.logout{
+
+background:#ef4444;
+
+margin-top:10px;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Account Settings</h2>
+
+<div class="setting">
+<label>Username</label>
+<input id="username">
+</div>
+
+<button onclick="save()">Save Changes</button>
+
+<button class="logout" onclick="logout()">Logout</button>
+
+</div>
+
+<script>
+
+let user = JSON.parse(localStorage.getItem("mindtrace_user")) || {}
+
+document.getElementById("username").value = user.username || ""
+
+function save(){
+
+user.username = document.getElementById("username").value
+
+localStorage.setItem("mindtrace_user",JSON.stringify(user))
+
+alert("Settings saved")
+
+}
+
+function logout(){
+
+localStorage.removeItem("mindtrace_user")
+
+window.location.href="index.html"
+
+}
+
+</script>
+
+</body>
+</html>

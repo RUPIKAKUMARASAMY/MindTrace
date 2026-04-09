@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Dashboard</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+color:#1f2937;
+transition:.3s;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:25px 40px;
+max-width:1300px;
+margin:auto;
+}
+
+.logo{
+font-size:22px;
+font-weight:600;
+color:#2563eb;
+}
+
+.nav-links{
+display:flex;
+gap:30px;
+font-size:16px;
+}
+
+.nav-links a{
+text-decoration:none;
+color:#374151;
+cursor:pointer;
+}
+
+.user-area{
+display:flex;
+gap:20px;
+font-size:22px;
+cursor:pointer;
+position:relative;
+}
+
+.dropdown{
+display:none;
+position:absolute;
+top:40px;
+right:0;
+background:white;
+border-radius:12px;
+box-shadow:0 20px 40px rgba(0,0,0,.2);
+padding:12px;
+width:180px;
+z-index:999;
+}
+
+.dropdown p{
+padding:8px;
+cursor:pointer;
+}
+
+.dropdown p:hover{
+background:#f3f4f6;
+border-radius:6px;
+}
+
+.container{
+max-width:1300px;
+margin:auto;
+padding:40px 30px;
+}
+
+.hero{
+text-align:center;
+margin-bottom:70px;
+}
+
+.hero h1{
+font-size:42px;
+color:#2563eb;
+margin-bottom:10px;
+}
+
+.hero p{
+opacity:.8;
+font-size:16px;
+margin-bottom:25px;
+}
+
+.start-btn{
+padding:14px 40px;
+border:none;
+border-radius:30px;
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+color:white;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+}
+
+.overview{
+background:rgba(255,255,255,.6);
+padding:30px;
+border-radius:20px;
+margin-bottom:80px;
+backdrop-filter:blur(10px);
+}
+
+.overview-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+margin-top:20px;
+}
+
+.overview-card{
+background:white;
+padding:20px;
+border-radius:14px;
+text-align:center;
+box-shadow:0 6px 15px rgba(0,0,0,.05);
+}
+
+.overview-card p{
+opacity:.7;
+margin-bottom:8px;
+}
+
+.trend-bar{
+margin-top:20px;
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+padding:12px;
+border-radius:12px;
+color:white;
+font-size:14px;
+}
+
+.tests{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+margin-bottom:90px;
+}
+
+.test-card{
+background:white;
+border-radius:18px;
+padding:32px;
+text-align:center;
+cursor:pointer;
+box-shadow:0 8px 20px rgba(0,0,0,.06);
+transition:.3s;
+}
+
+.test-card:hover{
+transform:translateY(-6px);
+}
+
+.test-card h3{
+color:#2563eb;
+}
+
+.mood-section{
+text-align:center;
+margin-bottom:90px;
+}
+
+.mood-card{
+max-width:520px;
+margin:auto;
+padding:45px;
+border-radius:24px;
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+color:white;
+cursor:pointer;
+}
+
+.support{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:25px;
+}
+
+.support-card{
+background:white;
+border-radius:18px;
+padding:30px;
+text-align:center;
+cursor:pointer;
+box-shadow:0 8px 20px rgba(0,0,0,.06);
+}
+
+.support-card h3{
+color:#2563eb;
+}
+
+.about-modal{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+padding:30px;
+width:420px;
+border-radius:18px;
+box-shadow:0 40px 80px rgba(0,0,0,.25);
+z-index:2000;
+text-align:center;
+}
+
+.close-btn{
+margin-top:20px;
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:#6366f1;
+color:white;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">MindTrace</div>
+
+<div class="nav-links">
+<a href="/">Dashboard</a>
+<a href="/assessment">Assessments</a>
+<a href="/games">Games</a>
+<a onclick="openAbout()">About Us</a>
+</div>
+
+<div class="user-area">
+
+<span onclick="toggleProfile()">👤</span>
+
+<div id="profileMenu" class="dropdown">
+<p onclick="openPanel('profilePanel')">Profile</p>
+
+<p onclick="window.location.href='/logout'">Logout</p>
+</div>
+
+<span onclick="toggleSettings()">⚙️</span>
+
+<div id="settingsMenu" class="dropdown">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px;">
+<span>Dark Mode</span>
+
+<label style="position:relative;width:40px;height:20px;">
+<input type="checkbox" id="themeToggle" onchange="toggleTheme()" style="opacity:0;width:0;height:0;">
+
+<span style="
+position:absolute;
+cursor:pointer;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#ccc;
+border-radius:20px;
+transition:.3s;
+"></span>
+
+<span style="
+position:absolute;
+height:16px;
+width:16px;
+left:2px;
+top:2px;
+background:white;
+border-radius:50%;
+transition:.3s;
+" id="toggleCircle"></span>
+
+</label>
+</div>
+
+<p onclick="clearChat()">Clear Chat</p>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- USER PANELS -->
+
+<div id="profilePanel" class="about-modal">
+<h2>User Profile</h2>
+<p>Name: {{ current_user.username }}</p>
+<p>Email: {{ current_user.email }}</p>
+<button class="close-btn" onclick="closePanel('profilePanel')">Close</button>
+</div>
+
+<div id="resultsPanel" class="about-modal">
+<h2>My Results</h2>
+<div id="userResults"></div>
+<button class="close-btn" onclick="closePanel('resultsPanel')">
+Close
+</button>
+
+</div>
+<div id="activityPanel" class="about-modal">
+<h2>Activity</h2>
+<p>Recent chatbot sessions and tests will appear here.</p>
+<button class="close-btn" onclick="closePanel('activityPanel')">Close</button>
+</div>
+
+<div class="container">
+
+<div class="hero">
+<h1>Welcome to MindTrace</h1>
+<p>Your emotional analytics hub</p>
+
+<button class="start-btn" onclick="window.location.href='/assessment'">
+Take Your Test
+</button>
+</div>
+
+<div class="overview">
+
+<h3 style="color:#2563eb;">Your Emotional Overview</h3>
+<div class="overview-grid">
+
+<div class="overview-card">
+<p>7-Day Average</p>
+
+<div class="progress-circle" id="avgCircle">
+    <div class="progress-circle">
+    <div class="progress-value" id="avgMood">--</div>
+</div>
+</div>
+
+<span id="avgEmoji">🙂</span>
+
+</div>
+
+
+<div class="overview-card">
+<p>Current Streak</p>
+
+<h2 id="streak" class="animate-number">0 days</h2>
+
+<span>🔥</span>
+
+</div>
+
+
+<div class="overview-card">
+<p>Trend</p>
+
+<h2 id="trend" class="animate-number">Stable</h2>
+
+<span id="trendEmoji">📊</span>
+
+</div>
+
+</div>
+
+<div class="trend-bar">
+You're trending positively. Keep nurturing what's working.
+</div>
+
+</div>
+
+<div class="tests">
+
+<div class="test-card" onclick="window.location.href='/depression'"><h3>Depression</h3></div>
+<div class="test-card" onclick="window.location.href='/anxiety'"><h3>Anxiety</h3></div>
+<div class="test-card" onclick="window.location.href='/stress'"><h3>Stress</h3></div>
+<div class="test-card" onclick="window.location.href='/adhd'"><h3>ADHD</h3></div>
+<div class="test-card" onclick="window.location.href='/ptsd'"><h3>PTSD</h3></div>
+<div class="test-card" onclick="window.location.href='/addiction'"><h3>Addiction</h3></div>
+<div class="test-card" onclick="window.location.href='/social-anxiety'"><h3>Social Anxiety</h3></div>
+<div class="test-card" onclick="window.location.href='/youth'"><h3>Youth Mental Health</h3></div>
+
+</div>
+
+<div class="mood-section">
+
+<div class="mood-card" onclick="window.location.href='/mood'">
+<h3>Daily Mood Tracker</h3>
+<p>Reflect, record and understand your emotional patterns</p>
+</div>
+
+</div>
+
+<div class="support">
+
+<div class="support-card" onclick="window.location.href='/consultation'">
+<div class="support-icon">🩺</div>
+<h3>Professional Consultation</h3>
+<p>Connect with licensed mental health professionals for expert guidance.</p>
+</div>
+
+<div class="support-card" onclick="window.location.href='/blog'">
+<div class="support-icon">📚</div>
+<h3>Mental Health Blog</h3>
+<p>Explore articles, coping strategies, and mental wellness insights.</p>
+</div>
+
+<div class="support-card" onclick="toggleChat()">
+<div class="support-icon">💬</div>
+<h3>Support Chat</h3>
+<p>Talk with the MindTrace AI assistant whenever you need support.</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- CHAT BUTTON -->
+
+<div onclick="toggleChat()" style="
+position:fixed;
+bottom:30px;
+right:30px;
+width:65px;
+height:65px;
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+color:white;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+cursor:pointer;
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+z-index:999;
+">
+💬
+</div>
+
+<!-- CHATBOX -->
+
+<div id="chatbox" style="
+display:none;
+position:fixed;
+bottom:105px;
+right:30px;
+width:380px;
+height:520px;
+background:rgba(255,255,255,.95);
+border-radius:18px;
+box-shadow:0 40px 80px rgba(0,0,0,.25);
+overflow:hidden;
+flex-direction:column;
+z-index:999;
+">
+
+<div style="
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+color:white;
+padding:16px;
+font-size:18px;
+font-weight:600;
+text-align:center;
+">
+MindTrace AI Assistant
+</div>
+
+<div id="messages" style="
+flex:1;
+padding:15px;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:10px;
+background:#f9fafb;
+"></div>
+
+<div style="
+display:flex;
+padding:12px;
+border-top:1px solid #eee;
+background:white;
+">
+
+<input id="userInput" placeholder="Tell me how you're feeling..." style="
+flex:1;
+padding:10px;
+border-radius:14px;
+border:1px solid #ddd;
+outline:none;
+font-size:14px;
+">
+
+<button onclick="sendMessage()" style="
+margin-left:10px;
+padding:10px 18px;
+border:none;
+border-radius:14px;
+background:#6366f1;
+color:white;
+font-size:14px;
+cursor:pointer;
+">
+Send
+</button>
+
+</div>
+
+</div>
+<div id="gameModal" class="about-modal">
+
+<h2>🎮 Relax & Play</h2>
+<p>Take a quick break and refresh your mind</p>
+
+<input type="number" id="guessInput" placeholder="Enter number (1-10)"
+style="padding:10px;border-radius:10px;border:1px solid #ccc;width:80%;margin-top:15px;">
+
+<br>
+
+<button onclick="playGame()" style="
+margin-top:10px;
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:#6366f1;
+color:white;
+cursor:pointer;">
+Guess
+</button>
+
+<p id="gameResult" style="margin-top:10px;"></p>
+
+<button class="close-btn" onclick="closePanel('gameModal')">Close</button>
+
+</div>
+
+<div id="aboutModal" class="about-modal">
+<h2>About MindTrace</h2>
+<p style="font-size:14px;line-height:1.6;">
+MindTrace helps users understand emotional patterns through mental health assessments and AI support conversations.
+</p>
+<button class="close-btn" onclick="closeAbout()">Close</button>
+</div>
+
+
+<script>
+
+function toggleProfile(){
+let menu=document.getElementById("profileMenu");
+menu.style.display = menu.style.display==="block" ? "none":"block";
+}
+
+function toggleSettings(){
+let menu=document.getElementById("settingsMenu");
+menu.style.display = menu.style.display==="block" ? "none":"block";
+}
+
+document.addEventListener("click",function(e){
+if(!e.target.closest(".user-area")){
+document.getElementById("profileMenu").style.display="none";
+document.getElementById("settingsMenu").style.display="none";
+}
+});
+
+function openPanel(id){
+document.getElementById(id).style.display="block";
+}
+
+function closePanel(id){
+document.getElementById(id).style.display="none";
+}
+
+function toggleTheme(){
+document.body.style.background="#0f172a";
+document.body.style.color="white";
+}
+
+function clearChat(){
+let messages=document.getElementById("messages");
+if(messages){ messages.innerHTML=""; }
+}
+
+function openAbout(){
+document.getElementById("aboutModal").style.display="block";
+}
+
+function closeAbout(){
+document.getElementById("aboutModal").style.display="none";
+}
+
+function toggleChat(){
+let chat=document.getElementById("chatbox");
+if(chat.style.display==="none" || chat.style.display===""){
+chat.style.display="flex";
+}else{
+chat.style.display="none";
+}
+}
+
+async function sendMessage(){
+
+let input=document.getElementById("userInput");
+let text=input.value.trim();
+
+if(!text) return;
+
+addMessage(text,"user");
+
+input.value="";
+
+let bot=document.createElement("div");
+bot.innerText="Thinking...";
+bot.style.background="linear-gradient(135deg,#38bdf8,#6366f1,#22c55e)";
+bot.style.color="white";
+bot.style.padding="10px 14px";
+bot.style.borderRadius="14px";
+bot.style.maxWidth="75%";
+
+document.getElementById("messages").appendChild(bot);
+
+let res=await fetch("/chatbot",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:text})
+});
+
+let data=await res.json();
+
+bot.innerText=data.reply;
+
+}
+
+function addMessage(text,type){
+
+let msg=document.createElement("div");
+
+msg.style.padding="10px 14px";
+msg.style.borderRadius="14px";
+msg.style.maxWidth="75%";
+
+if(type==="user"){
+msg.style.background="#e3f2fd";
+msg.style.alignSelf="flex-end";
+}else{
+msg.style.background="linear-gradient(135deg,#38bdf8,#6366f1,#22c55e)";
+msg.style.color="white";
+}
+
+msg.innerText=text;
+
+document.getElementById("messages").appendChild(msg);
+
+document.getElementById("messages").scrollTop=9999;
+
+}
+async function loadResults(){
+
+let res = await fetch("/api/my-results");
+let data = await res.json();
+
+let container = document.getElementById("userResults");
+
+container.innerHTML = "";
+
+if(data.length === 0){
+container.innerHTML = "<p>No tests taken yet</p>";
+return;
+}
+
+data.forEach(r => {
+
+container.innerHTML += `
+<div style="
+background:#f9fafb;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+">
+<b>${r.test}</b><br>
+Score: ${r.score}<br>
+Severity: ${r.severity}
+</div>
+`;
+
+});
+
+}
+// -------------------- MOOD OVERVIEW (ADDED) --------------------
+
+function loadMoodOverview(){
+
+let data = JSON.parse(localStorage.getItem("moods")) || [];
+
+if(data.length === 0){
+    document.getElementById("avgMood").innerText = "--";
+    document.getElementById("streak").innerText = "0 days";
+    document.getElementById("trend").innerText = "No Data";
+    return;
+}
+
+// -------- 7 DAY AVERAGE --------
+let last7 = data.slice(0,7);
+
+let avg = last7.reduce((a,b)=>a+b.mood,0) / last7.length;
+
+document.getElementById("avgMood").innerText = avg.toFixed(1);
+
+
+// -------- STREAK --------
+let streak = 1;
+
+for(let i=1;i<data.length;i++){
+
+    let prev = new Date(data[i-1].date);
+    let curr = new Date(data[i].date);
+
+    if((prev - curr)/(1000*60*60*24) === 1){
+        streak++;
+    } else {
+        break;
+    }
+}
+
+document.getElementById("streak").innerText = streak + " days";
+
+
+// -------- TREND --------
+if(avg < 2){
+    document.getElementById("trend").innerText = "Low";
+}
+else if(avg < 3.5){
+    document.getElementById("trend").innerText = "Stable";
+}
+else{
+    document.getElementById("trend").innerText = "Positive";
+}
+
+}
+
+// CALL IT WHEN PAGE LOADS
+loadMoodOverview();
+function openGame(){
+document.getElementById("gameModal").style.display = "block";
+}
+
+function playGame(){
+
+let input = document.getElementById("guessInput");
+let result = document.getElementById("gameResult");
+
+let user = parseInt(input.value);
+let random = Math.floor(Math.random()*10)+1;
+
+if(!user){
+result.innerText = "Enter a number!";
+return;
+}
+
+if(user === random){
+result.innerText = "🎉 Correct!";
+}else{
+result.innerText = "❌ It was " + random;
+}
+
+}
+
+function openGame(){
+document.getElementById("gameModal").style.display = "block";
+}
+
+function playGame(){
+
+let input = document.getElementById("guessInput");
+let result = document.getElementById("gameResult");
+
+let user = parseInt(input.value);
+let random = Math.floor(Math.random()*10)+1;
+
+if(!user){
+result.innerText = "Enter a number!";
+return;
+}
+
+if(user === random){
+result.innerText = "🎉 Correct!";
+}else{
+result.innerText = "❌ It was " + random;
+}
+
+}
+
+
+</script>
+
+</body>
+</html>

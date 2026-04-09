@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Your Results</title>
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+
+padding:80px 10%;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+h1{
+text-align:center;
+margin-bottom:50px;
+color:#2563eb;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.result-card{
+background:rgba(255,255,255,.9);
+padding:25px;
+border-radius:20px;
+margin-bottom:20px;
+box-shadow:0 20px 50px rgba(0,0,0,.08);
+}
+
+.test{
+font-size:18px;
+font-weight:600;
+color:#2563eb;
+}
+
+.severity{
+margin-top:8px;
+font-size:15px;
+}
+
+.score{
+font-size:14px;
+margin-top:4px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Your Assessment Results</h1>
+
+<div class="container">
+
+{% if results %}
+
+    {% for r in results %}
+
+    <div class="result-card">
+
+        <div class="test">{{ r.test_name }}</div>
+
+        <div class="severity">Severity: {{ r.severity }}</div>
+
+        <div class="score">Score: {{ r.score }}</div>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+<p style="text-align:center;">No assessments taken yet.</p>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

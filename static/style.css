@@ -1,0 +1,559 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* PAGE BACKGROUND */
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    min-height: 100vh;
+
+    background: linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+    background-size: 400% 400%;
+    animation: gradientFlow 18s ease infinite;
+}
+
+/* BACKGROUND ANIMATION */
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* LOGIN WRAPPER */
+
+.login-wrapper {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* LOGIN CARD */
+
+.login-card {
+    width: 400px;
+    padding: 45px;
+    border-radius: 26px;
+
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(16px);
+
+    box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+
+    text-align: center;
+
+    animation: floatCard 4s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
+
+.login-card:hover{
+    transform: translateY(-4px);
+}
+
+@keyframes floatCard {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* LOGO */
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.logo-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+
+    background: linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+    position: relative;
+    margin-bottom: 12px;
+
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.logo-icon::before {
+    content: "";
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: white;
+    top: 18px;
+    left: 18px;
+}
+
+.logo h1 {
+    color: #2563eb;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* INPUT */
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    outline: none;
+    font-size: 14px;
+
+    background: #f9fbff;
+
+    transition: all 0.25s ease;
+}
+
+input:hover{
+    border-color:#6366f1;
+}
+
+input:focus {
+    border-color: #2563eb;
+
+    box-shadow: 0 0 8px rgba(37,99,235,0.3);
+
+    background:white;
+}
+
+/* BUTTON */
+
+button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+
+    background: linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+}
+
+/* LINKS */
+
+.link {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #666;
+}
+
+.link a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link a:hover{
+    text-decoration: underline;
+}
+
+/* MESSAGE */
+
+#message {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+
+/* ===================================================== */
+/* 🔥 ADDED: EMOTIONAL OVERVIEW UI (NO REMOVALS ABOVE) */
+/* ===================================================== */
+
+.overview{
+    background: linear-gradient(135deg, rgba(255,255,255,0.45), rgba(255,255,255,0.2));
+    backdrop-filter: blur(18px);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+
+.overview-card{
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(14px);
+    border-radius: 18px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: .3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.overview-card:hover{
+    transform: translateY(-6px) scale(1.02);
+}
+
+/* soft glow effect */
+.overview-card::before{
+    content:"";
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background: radial-gradient(circle, rgba(99,102,241,0.15), transparent 60%);
+    opacity:.6;
+}
+
+.overview-card p{
+    font-size:14px;
+    opacity:.7;
+    margin-bottom:10px;
+}
+
+.overview-card h2{
+    font-size:28px;
+    font-weight:700;
+    color:#1f2937;
+}
+
+.overview-card span{
+    display:block;
+    font-size:22px;
+    margin-top:6px;
+}
+
+.trend-bar{
+    margin-top:25px;
+    background: linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+    padding:14px;
+    border-radius:14px;
+    color:white;
+    font-size:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* PAGE BACKGROUND */
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    min-height: 100vh;
+
+    background: linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+    background-size: 400% 400%;
+    animation: gradientFlow 18s ease infinite;
+}
+
+/* BACKGROUND ANIMATION */
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* LOGIN WRAPPER */
+
+.login-wrapper {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* LOGIN CARD */
+
+.login-card {
+    width: 400px;
+    padding: 45px;
+    border-radius: 26px;
+
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(16px);
+
+    box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+
+    text-align: center;
+
+    animation: floatCard 4s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
+
+.login-card:hover{
+    transform: translateY(-4px);
+}
+
+@keyframes floatCard {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* LOGO */
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.logo-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+
+    background: linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+    position: relative;
+    margin-bottom: 12px;
+
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.logo-icon::before {
+    content: "";
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: white;
+    top: 18px;
+    left: 18px;
+}
+
+.logo h1 {
+    color: #2563eb;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* INPUT */
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    outline: none;
+    font-size: 14px;
+
+    background: #f9fbff;
+
+    transition: all 0.25s ease;
+}
+
+input:hover{
+    border-color:#6366f1;
+}
+
+input:focus {
+    border-color: #2563eb;
+
+    box-shadow: 0 0 8px rgba(37,99,235,0.3);
+
+    background:white;
+}
+
+/* BUTTON */
+
+button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+
+    background: linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+}
+
+/* LINKS */
+
+.link {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #666;
+}
+
+.link a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link a:hover{
+    text-decoration: underline;
+}
+
+/* MESSAGE */
+
+#message {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+
+/* ===================================================== */
+/* 🔥 ADDED: EMOTIONAL OVERVIEW UI (NO REMOVALS ABOVE) */
+/* ===================================================== */
+
+.overview{
+    background: linear-gradient(135deg, rgba(255,255,255,0.45), rgba(255,255,255,0.2));
+    backdrop-filter: blur(18px);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+
+.overview-card{
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(14px);
+    border-radius: 18px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: .3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.overview-card:hover{
+    transform: translateY(-6px) scale(1.02);
+}
+
+/* soft glow effect */
+.overview-card::before{
+    content:"";
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background: radial-gradient(circle, rgba(99,102,241,0.15), transparent 60%);
+    opacity:.6;
+}
+
+.overview-card p{
+    font-size:14px;
+    opacity:.7;
+    margin-bottom:10px;
+}
+
+.overview-card h2{
+    font-size:28px;
+    font-weight:700;
+    color:#1f2937;
+}
+
+.overview-card span{
+    display:block;
+    font-size:22px;
+    margin-top:6px;
+}
+
+.trend-bar{
+    margin-top:25px;
+    background: linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+    padding:14px;
+    border-radius:14px;
+    color:white;
+    font-size:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}/* ============================= */
+/* 🔥 ADVANCED OVERVIEW EFFECTS */
+/* ============================= */
+
+/* animated numbers */
+.animate-number{
+    transition: all 0.6s ease;
+}
+
+/* circular progress wrapper */
+.progress-circle{
+    width: 80px;
+    height: 80px;
+    margin: 10px auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(#6366f1 180deg, #e5e7eb 0deg);
+    position: relative;
+}
+
+.progress-circle::after{
+    content:"";
+    width:58px;
+    height:58px;
+    background:rgba(255,255,255,0.9);
+    border-radius:50%;
+    position:absolute;
+    z-index:1;
+}
+
+/* inside number */
+.progress-value{
+    position:relative;
+    z-index:2;
+}
+
+
+/* dynamic color states */
+.trend-positive{
+    color:#22c55e;
+}
+
+.trend-stable{
+    color:#6366f1;
+}
+
+.trend-low{
+    color:#ef4444;
+}
+.progress-circle{
+    border: 6px solid #6366f1;   /* 🔥 this makes ring visible */
+}

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | PTSD Assessment</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+
+display:flex;
+justify-content:center;
+align-items:flex-start;
+padding:60px 20px;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.assessment-wrapper{
+display:flex;
+justify-content:center;
+width:100%;
+}
+
+.assessment-card{
+
+width:750px;
+
+background:rgba(255,255,255,.85);
+backdrop-filter:blur(16px);
+
+padding:40px;
+
+border-radius:26px;
+
+box-shadow:0 25px 60px rgba(0,0,0,.08);
+
+max-height:85vh;
+overflow-y:auto;
+
+}
+
+h2{
+text-align:center;
+margin-bottom:10px;
+color:#2563eb;
+}
+
+.subtitle{
+text-align:center;
+font-size:14px;
+color:#666;
+margin-bottom:30px;
+}
+
+.question{
+margin-bottom:25px;
+}
+
+.question h4{
+margin-bottom:12px;
+color:#444;
+font-weight:500;
+}
+
+.options{
+display:flex;
+gap:10px;
+}
+
+.option-btn{
+
+flex:1;
+
+padding:11px;
+
+border-radius:10px;
+
+border:1px solid #e5e7eb;
+
+cursor:pointer;
+
+text-align:center;
+
+font-size:13px;
+
+transition:.25s;
+
+}
+
+.option-btn:hover{
+background:#eef2ff;
+}
+
+.option-btn.active{
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+color:white;
+border:none;
+}
+
+.submit-btn{
+
+margin-top:30px;
+
+padding:14px;
+
+border-radius:14px;
+
+border:none;
+
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+color:white;
+
+cursor:pointer;
+
+width:100%;
+
+font-weight:600;
+
+transition:.2s;
+
+}
+
+.submit-btn:hover{
+transform:translateY(-2px);
+}
+
+.result-card{
+
+margin-top:30px;
+
+padding:25px;
+
+border-radius:16px;
+
+background:#f8fafc;
+
+display:none;
+
+animation:fadeIn .4s ease;
+
+}
+
+.severity-low{color:#16a34a;}
+.severity-moderate{color:#f59e0b;}
+.severity-high{color:#dc2626;}
+
+.back-btn{
+
+margin-top:20px;
+
+padding:10px 20px;
+
+border-radius:10px;
+
+border:none;
+
+background:#2563eb;
+
+color:white;
+
+cursor:pointer;
+
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="assessment-wrapper">
+<div class="assessment-card">
+
+<h2>PTSD Assessment</h2>
+
+<div class="subtitle">
+Over the past month, how often have you experienced the following?
+</div>
+
+<form id="ptsdForm"></form>
+
+<button class="submit-btn" onclick="calculateScore()">
+Submit Assessment
+</button>
+
+<div class="result-card" id="resultCard">
+
+<h3 id="severityText"></h3>
+
+<p id="recommendationText"></p>
+
+<button class="back-btn" onclick="goDashboard()">
+Return to Dashboard
+</button>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+const questions = [
+"Repeated disturbing memories or flashbacks of a stressful event.",
+"Feeling emotionally distressed when reminded of the event.",
+"Avoiding thoughts or conversations about the trauma.",
+"Avoiding places or people that remind you of the trauma.",
+"Feeling detached or distant from others.",
+"Difficulty experiencing positive emotions.",
+"Irritability or angry outbursts.",
+"Being overly alert or easily startled.",
+"Difficulty concentrating.",
+"Trouble falling or staying asleep."
+];
+
+const form=document.getElementById("ptsdForm");
+
+questions.forEach((q,index)=>{
+
+const questionDiv=document.createElement("div");
+questionDiv.classList.add("question");
+
+questionDiv.innerHTML=`
+<h4>${index+1}. ${q}</h4>
+
+<div class="options">
+<div class="option-btn" onclick="selectOption(this,${index},0)">Never</div>
+<div class="option-btn" onclick="selectOption(this,${index},1)">Sometimes</div>
+<div class="option-btn" onclick="selectOption(this,${index},2)">Often</div>
+<div class="option-btn" onclick="selectOption(this,${index},3)">Always</div>
+</div>
+`;
+
+form.appendChild(questionDiv);
+
+});
+
+let answers=new Array(questions.length).fill(null);
+
+function selectOption(element,questionIndex,value){
+
+const siblings=element.parentElement.querySelectorAll(".option-btn");
+
+siblings.forEach(btn=>btn.classList.remove("active"));
+
+element.classList.add("active");
+
+answers[questionIndex]=value;
+
+}
+
+function calculateScore(){
+
+if(answers.includes(null)){
+alert("Please answer all questions before submitting.");
+return;
+}
+
+let total=answers.reduce((a,b)=>a+b,0);
+
+let severity="";
+let recommendation="";
+
+if(total<=8){
+severity="Minimal";
+recommendation="Symptoms appear minimal. Continue maintaining emotional wellness.";
+}
+else if(total<=14){
+severity="Mild";
+recommendation="Mild trauma-related symptoms detected. Consider self-care and support.";
+}
+else if(total<=20){
+severity="Moderate";
+recommendation="Moderate PTSD-related symptoms detected. Professional guidance may be helpful.";
+}
+else{
+severity="Severe";
+recommendation="Severe trauma-related symptoms detected. Professional mental health support is strongly recommended.";
+}
+
+saveResult("PTSD", severity, total);
+
+const resultCard=document.getElementById("resultCard");
+const severityText=document.getElementById("severityText");
+const recommendationText=document.getElementById("recommendationText");
+
+severityText.innerText="PTSD Level: "+severity;
+recommendationText.innerText=recommendation;
+
+severityText.className="";
+
+if(severity==="Minimal"){
+severityText.classList.add("severity-low");
+}
+else if(severity==="Mild"||severity==="Moderate"){
+severityText.classList.add("severity-moderate");
+}
+else{
+severityText.classList.add("severity-high");
+}
+
+resultCard.style.display="block";
+
+}
+
+function saveResult(test,severity,score){
+
+let results = JSON.parse(localStorage.getItem("mindtrace_results")) || [];
+
+results.push({
+test:test,
+severity:severity,
+score:score,
+date:new Date().toLocaleDateString()
+});
+
+localStorage.setItem("mindtrace_results",JSON.stringify(results));
+
+}
+
+function goDashboard(){
+window.location.href="/";
+}
+
+</script>
+
+</body>
+</html>

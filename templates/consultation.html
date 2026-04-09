@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MindTrace | Consultation</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+
+background:linear-gradient(135deg,#a8edea,#d6f6ff,#c9d6ff,#e4c1f9);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* Background Glow */
+
+.bg{
+position:fixed;
+width:500px;
+height:500px;
+border-radius:50%;
+filter:blur(140px);
+opacity:.35;
+z-index:0;
+}
+
+.bg1{
+background:#38bdf8;
+top:-200px;
+left:-200px;
+}
+
+.bg2{
+background:#22c55e;
+bottom:-200px;
+right:-200px;
+}
+
+.wrapper{
+position:relative;
+z-index:1;
+width:850px;
+max-width:95%;
+}
+
+.card{
+
+backdrop-filter:blur(20px);
+
+background:rgba(255,255,255,.85);
+
+border-radius:35px;
+
+padding:60px;
+
+box-shadow:0 40px 80px rgba(0,0,0,.08);
+
+text-align:center;
+
+}
+
+/* Progress */
+
+.progress{
+height:4px;
+background:#eee;
+border-radius:10px;
+margin-bottom:40px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:100%;
+width:25%;
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+transition:.4s ease;
+}
+
+h2{
+color:#2563eb;
+margin-bottom:40px;
+}
+
+/* Steps */
+
+.step{
+display:none;
+animation:fade .4s ease;
+}
+
+.step.active{
+display:block;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* Options */
+
+.options{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+}
+
+.option{
+
+padding:20px;
+
+border-radius:20px;
+
+border:1px solid #e5e7eb;
+
+cursor:pointer;
+
+transition:.3s;
+
+background:white;
+
+}
+
+.option:hover{
+transform:translateY(-4px);
+}
+
+.option.selected{
+
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+border:none;
+
+color:white;
+
+}
+
+/* Input */
+
+input{
+
+width:100%;
+
+padding:12px;
+
+border-radius:12px;
+
+border:1px solid #ddd;
+
+margin-top:20px;
+
+}
+
+/* Time Slots */
+
+.time-slots{
+
+display:flex;
+
+justify-content:center;
+
+gap:15px;
+
+flex-wrap:wrap;
+
+margin-top:20px;
+
+}
+
+.slot{
+
+padding:8px 20px;
+
+border-radius:50px;
+
+border:1px solid #ccc;
+
+cursor:pointer;
+
+background:white;
+
+}
+
+.slot.selected{
+
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+border:none;
+
+color:white;
+
+}
+
+/* Buttons */
+
+.btn{
+
+margin-top:35px;
+
+padding:14px 35px;
+
+border-radius:50px;
+
+border:none;
+
+background:linear-gradient(135deg,#38bdf8,#6366f1,#22c55e);
+
+color:white;
+
+cursor:pointer;
+
+font-weight:600;
+
+}
+
+.confirm{
+margin-top:30px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg bg1"></div>
+<div class="bg bg2"></div>
+
+<div class="wrapper">
+<div class="card">
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<h2>Book Your Personalized Session</h2>
+
+<!-- STEP 1 -->
+<div class="step active" id="step1">
+
+<h3>How are you feeling today?</h3>
+
+<div class="options">
+
+<div class="option" onclick="chooseFeeling(this,'Anxiety')">Anxiety</div>
+
+<div class="option" onclick="chooseFeeling(this,'Depression')">Depression</div>
+
+<div class="option" onclick="chooseFeeling(this,'Stress')">Stress</div>
+
+<div class="option" onclick="chooseFeeling(this,'Trauma')">Trauma</div>
+
+</div>
+
+<button class="btn" onclick="nextStep()">Continue</button>
+
+</div>
+
+<!-- STEP 2 -->
+
+<div class="step" id="step2">
+
+<h3>Your Recommended Specialist</h3>
+
+<p id="doctorName" style="margin-top:20px;font-weight:500;"></p>
+
+<button class="btn" onclick="nextStep()">Continue</button>
+
+</div>
+
+<!-- STEP 3 -->
+
+<div class="step" id="step3">
+
+<h3>Choose Session Mode</h3>
+
+<div class="options">
+
+<div class="option" onclick="chooseSession(this,'Video Call')">Video Call</div>
+
+<div class="option" onclick="chooseSession(this,'Audio Call')">Audio Call</div>
+
+<div class="option" onclick="chooseSession(this,'Chat')">Live Chat</div>
+
+<div class="option" onclick="chooseSession(this,'In Person')">In Person</div>
+
+</div>
+
+<button class="btn" onclick="nextStep()">Continue</button>
+
+</div>
+
+<!-- STEP 4 -->
+
+<div class="step" id="step4">
+
+<h3>Select Date & Time</h3>
+
+<input type="date" id="date">
+
+<div class="time-slots">
+
+<div class="slot" onclick="chooseTime(this)">10:00 AM</div>
+
+<div class="slot" onclick="chooseTime(this)">1:00 PM</div>
+
+<div class="slot" onclick="chooseTime(this)">4:00 PM</div>
+
+<div class="slot" onclick="chooseTime(this)">7:00 PM</div>
+
+</div>
+
+<button class="btn" onclick="confirmBooking()">Confirm Session</button>
+
+<div id="confirmationBox"></div>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+let currentStep=1;
+let feeling="",session="",time="",doctor="";
+
+function nextStep(){
+
+if(currentStep<4){
+
+document.getElementById("step"+currentStep).classList.remove("active");
+
+currentStep++;
+
+document.getElementById("step"+currentStep).classList.add("active");
+
+document.getElementById("progressBar").style.width=(currentStep*25)+"%";
+
+}
+
+}
+
+function chooseFeeling(el,value){
+
+document.querySelectorAll("#step1 .option").forEach(o=>o.classList.remove("selected"));
+
+el.classList.add("selected");
+
+feeling=value;
+
+if(value==="Anxiety"||value==="Depression")
+doctor="Dr. Ananya Rao";
+
+if(value==="Stress")
+doctor="Dr. Meera Iyer";
+
+if(value==="Trauma")
+doctor="Dr. Karthik Menon";
+
+document.getElementById("doctorName").innerHTML="<strong>"+doctor+"</strong>";
+
+}
+
+function chooseSession(el,value){
+
+document.querySelectorAll("#step3 .option").forEach(o=>o.classList.remove("selected"));
+
+el.classList.add("selected");
+
+session=value;
+
+}
+
+function chooseTime(el){
+
+document.querySelectorAll(".slot").forEach(s=>s.classList.remove("selected"));
+
+el.classList.add("selected");
+
+time=el.innerText;
+
+}
+
+function confirmBooking(){
+
+const date=document.getElementById("date").value;
+
+if(!feeling||!session||!date||!time){
+
+alert("Please complete all steps.");
+
+return;
+
+}
+
+document.getElementById("confirmationBox").innerHTML=
+
+"<div class='confirm'><h3>Session Confirmed</h3>"+
+
+"<p>"+doctor+"</p>"+
+
+"<p>"+feeling+" • "+session+"</p>"+
+
+"<p>"+date+" at "+time+"</p></div>";
+
+}
+
+</script>
+
+</body>
+</html>
